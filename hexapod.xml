@@ -1,0 +1,190 @@
+<mujoco model="MyHexapod_ScaledOriginal"> <!-- Model name -->
+
+  <option timestep="0.001" integrator="RK4" gravity="0 0 -9.81">
+    <flag contact="enable" energy="enable"/>
+  </option>
+
+  <visual>
+    <headlight ambient="0.25 0.25 0.25"/>
+    <map znear="0.01" zfar="50"/>
+    <quality shadowsize="4096"/>
+  </visual>
+
+  <asset>
+      <texture type="skybox" builtin="gradient" rgb1=".4 .6 .8" rgb2="0 0 0" width="256" height="256"/>
+
+      <mesh name="body" file="assets/hexapod.stl" scale="0.001 0.001 0.001"/>
+
+      <!-- Leg meshes - Added scaling to all -->
+      <mesh name="coxa_L1_mesh" file="assets/coxa_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh name="femur_L1_mesh" file="assets/femur.stl" scale="0.001 0.001 0.001"/>
+      <mesh name="tibia_L1_mesh" file="assets/tibia_1.stl" scale="0.001 0.001 0.001"/>
+
+      <mesh name="coxa_L2_mesh" file="assets/coxa_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh name="femur_L2_mesh" file="assets/femur_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh name="tibia_L2_mesh" file="assets/tibia.stl" scale="0.001 0.001 0.001"/>
+
+      <mesh name="coxa_L3_mesh" file="assets/coxa.stl" scale="0.001 0.001 0.001"/>
+      <mesh name="femur_L3_mesh" file="assets/femur_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh name="tibia_L3_mesh" file="assets/tibia_2.stl" scale="0.001 0.001 0.001"/>
+
+      <mesh name="coxa_L4_mesh" file="assets/coxa_mir.stl" scale="0.001 0.001 0.001"/>
+      <mesh name="femur_L4_mesh" file="assets/femur_mir.stl" scale="0.001 0.001 0.001"/>
+      <mesh name="tibia_L4_mesh" file="assets/tibia_mir_1.stl" scale="0.001 0.001 0.001"/>
+
+      <mesh name="coxa_L5_mesh" file="assets/coxa_mir_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh name="femur_L5_mesh" file="assets/femur_mir_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh name="tibia_L5_mesh" file="assets/tibia_mir.stl" scale="0.001 0.001 0.001"/>
+
+      <mesh name="coxa_L6_mesh" file="assets/coxa_mir_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh name="femur_L6_mesh" file="assets/femur_mir_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh name="tibia_L6_mesh" file="assets/tibia_mir_2.stl" scale="0.001 0.001 0.001"/>
+  </asset>
+
+  <default>
+      <geom type="mesh" rgba="0.8 0.8 0.2 1" mass="0.1" condim="6" friction="1.0 0.1 0.002" solref="0.02 1" solimp="0.8 0.9 0.001"/>
+      <joint type="hinge" range="-90 90" damping="1.0" stiffness="0"/>
+      <position kp="20" forcelimited="true" forcerange="-10 10"/>
+  </default>
+
+
+  <worldbody>
+      <light directional="true" pos="0 0 1.5" dir="0 0 -1"/>
+      <geom name="ground" type="plane" size="5 5 0.1" rgba="0.2 0.3 0.4 1"/>
+
+      <body name="torso" pos="0 0 0.1"> 
+          <freejoint name="root"/> 
+          <geom name="torso" mesh="body"/>
+
+          <!-- L1: Front Left Leg -->
+          <body name="coxa_L1" pos="0 0 0">
+              <geom name="coxa_L1" mesh="coxa_L1_mesh"/>
+              <!-- Joint position relative to coxa_L1 origin (same as torso origin), scaled -->
+              <joint name="coxa_L1_joint" type="hinge" pos="-0.090 -0.065 0.040" axis="0 0 1" range="-90 90"/>
+              <body name="femur_L1" pos="0 0 0">
+                  <geom name="femur_L1" mesh="femur_L1_mesh"/>
+                  <joint name="femur_L1_joint" type="hinge" pos="-0.107 -0.107 0.036" axis="-1 1 0" range="-90 90"/>
+                  <body name="tibia_L1" pos="0 0 0">
+                      <geom name="tibia_L1" mesh="tibia_L1_mesh"/>
+                      <joint name="tibia_L1_joint" type="hinge" pos="-0.150 -0.150 0.036" axis="-1 1 0" range="-90 90"/>
+                      <site name="touch_L1" type="sphere" size="0.01" pos="-0.20 -0.20 0.02" rgba="1 0 0 0"/>
+                  </body>
+              </body>
+          </body>
+
+          <!-- L2: Middle Left Leg -->
+          <body name="coxa_L2" pos="0 0 0">
+              <geom name="coxa_L2" mesh="coxa_L2_mesh"/>
+              <joint name="coxa_L2_joint" type="hinge" pos="-0.110 0.020 0.040" axis="0 0 1" range="-90 90"/>
+              <body name="femur_L2" pos="0 0 0">
+                  <geom name="femur_L2" mesh="femur_L2_mesh"/>
+                  <joint name="femur_L2_joint" type="hinge" pos="-0.151 0.020 0.036" axis="0 1 0" range="-90 90"/>
+                  <body name="tibia_L2" pos="0 0 0">
+                      <geom name="tibia_L2" mesh="tibia_L2_mesh"/>
+                      <joint name="tibia_L2_joint" type="hinge" pos="-0.2115 0.0205 0.036" axis="0 1 0" range="-90 90"/>
+                      <site name="touch_L2" type="sphere" size="0.01" pos="-0.26 0.02 0.02" rgba="1 0 0 0"/>
+                  </body>
+              </body>
+          </body> 
+
+          <!-- L3: Rear Left Leg -->
+          <body name="coxa_L3" pos="0 0 0">
+              <geom name="coxa_L3" mesh="coxa_L3_mesh"/>
+              <joint name="coxa_L3_joint" type="hinge" pos="-0.090 0.104 0.040" axis="0 0 1" range="-90 90"/>
+              <body name="femur_L3" pos="0 0 0">
+                  <joint name="femur_L3_joint" type="hinge" pos="-0.154 0.100 0.036" axis="1 1 0" range="-90 90"/>
+                  <geom name="femur_L3" mesh="femur_L3_mesh"/>
+                  <body name="tibia_L3" pos="0 0 0">
+                      <geom name="tibia_L3" mesh="tibia_L3_mesh"/>
+                      <joint name="tibia_L3_joint" type="hinge" pos="-0.198 0.140 0.036" axis="1 1 0" range="-90 90"/>
+                      <site name="touch_L3" type="sphere" size="0.01" pos="-0.24 0.18 0.02" rgba="1 0 0 0"/>
+                  </body>
+              </body>
+          </body>
+
+          <!-- L4: Rear Right Leg -->
+          <body name="coxa_L4" pos="0 0 0">
+              <geom name="coxa_L4" mesh="coxa_L4_mesh"/>
+              <joint name="coxa_L4_joint" type="hinge" pos="0.038 0.104 0.040" axis="0 0 1" range="-90 90"/>
+              <body name="femur_L4" pos="0 0 0">
+                  <geom name="femur_L4" mesh="femur_L4_mesh"/>
+                  <joint name="femur_L4_joint" type="hinge" pos="0.0675 0.1325 0.036" axis="1 -1 0" range="-90 90"/>
+                  <body name="tibia_L4" pos="0 0 0">
+                      <geom name="tibia_L4" mesh="tibia_L4_mesh"/>
+                      <joint name="tibia_L4_joint" type="hinge" pos="0.110 0.175 0.036" axis="1 -1 0" range="-90 90"/>
+                      <site name="touch_L4" type="sphere" size="0.01" pos="0.16 0.22 0.02" rgba="1 0 0 0"/>
+                  </body>
+              </body>
+          </body>
+
+          <!-- L5: Middle Right Leg -->
+          <body name="coxa_L5" pos="0 0 0">
+              <geom name="coxa_L5" mesh="coxa_L5_mesh"/>
+              <joint name="coxa_L5_joint" type="hinge" pos="0.055 0.020 0.040" axis="0 0 1" range="-90 90"/>
+              <body name="femur_L5" pos="0 0 0">
+                  <geom name="femur_L5" mesh="femur_L5_mesh"/>
+                  <joint name="femur_L5_joint" type="hinge" pos="0.100 0.020 0.036" axis="0 -1 0" range="-90 90"/>
+                  <body name="tibia_L5" pos="0 0 0">
+                      <geom name="tibia_L5" mesh="tibia_L5_mesh"/>
+                      <joint name="tibia_L5_joint" type="hinge" pos="0.159 0.020 0.036" axis="0 -1 0" range="-90 90"/>
+                       <site name="touch_L5" type="sphere" size="0.01" pos="0.21 0.02 0.02" rgba="1 0 0 0"/>
+                  </body>
+              </body>
+          </body>
+
+          <!-- L6: Front Right Leg -->
+          <body name="coxa_L6" pos="0 0 0">
+              <geom name="coxa_L6" mesh="coxa_L6_mesh"/>
+              <joint name="coxa_L6_joint" type="hinge" pos="0.038 -0.065 0.040" axis="0 0 1" range="-90 90"/>
+              <body name="femur_L6" pos="0 0 0">
+                  <geom name="femur_L6" mesh="femur_L6_mesh"/>
+                  <joint name="femur_L6_joint" type="hinge" pos="0.0658 -0.0958 0.036" axis="-1 -1 0" range="-90 90"/>
+                  <body name="tibia_L6" pos="0 0 0">
+                      <geom name="tibia_L6" mesh="tibia_L6_mesh"/>
+                      <joint name="tibia_L6_joint" type="hinge" pos="0.1085 -0.1385 0.036" axis="-1 -1 0" range="-90 90"/>
+                      <site name="touch_L6" type="sphere" size="0.01" pos="0.15 -0.18 0.02" rgba="1 0 0 0"/>
+                  </body>
+              </body>
+          </body>
+
+      </body> <!-- End torso body -->
+  </worldbody>
+
+  <!-- Added Sensor definitions -->
+  <sensor>
+      <touch name="touch_L1_sensor" site="touch_L1"/>
+      <touch name="touch_L2_sensor" site="touch_L2"/>
+      <touch name="touch_L3_sensor" site="touch_L3"/>
+      <touch name="touch_L4_sensor" site="touch_L4"/>
+      <touch name="touch_L5_sensor" site="touch_L5"/>
+      <touch name="touch_L6_sensor" site="touch_L6"/>
+  </sensor>
+
+  <actuator>
+      <!-- L1 -->
+      <position joint="coxa_L1_joint" name="coxa_L1_motor"/>
+      <position joint="femur_L1_joint" name="femur_L1_motor"/>
+      <position joint="tibia_L1_joint" name="tibia_L1_motor"/>
+      <!-- L2 -->
+      <position joint="coxa_L2_joint" name="coxa_L2_motor"/>
+      <position joint="femur_L2_joint" name="femur_L2_motor"/>
+      <position joint="tibia_L2_joint" name="tibia_L2_motor"/>
+      <!-- L3 -->
+      <position joint="coxa_L3_joint" name="coxa_L3_motor"/>
+      <position joint="femur_L3_joint" name="femur_L3_motor"/>
+      <position joint="tibia_L3_joint" name="tibia_L3_motor"/>
+      <!-- L4 -->
+      <position joint="coxa_L4_joint" name="coxa_L4_motor"/>
+      <position joint="femur_L4_joint" name="femur_L4_motor"/>
+      <position joint="tibia_L4_joint" name="tibia_L4_motor"/>
+      <!-- L5 -->
+      <position joint="coxa_L5_joint" name="coxa_L5_motor"/>
+      <position joint="femur_L5_joint" name="femur_L5_motor"/>
+      <position joint="tibia_L5_joint" name="tibia_L5_motor"/>
+      <!-- L6 -->
+      <position joint="coxa_L6_joint" name="coxa_L6_motor"/>
+      <position joint="femur_L6_joint" name="femur_L6_motor"/>
+      <position joint="tibia_L6_joint" name="tibia_L6_motor"/>
+  </actuator>
+
+</mujoco>
